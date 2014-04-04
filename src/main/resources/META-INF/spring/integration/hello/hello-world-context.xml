@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-3.0.xsd">
+
+  <int:channel id="inputChannel">
+    <int:interceptors>
+      <int:wire-tap channel="logger" />
+    </int:interceptors>
+  </int:channel>
+
+  <int:channel id="outputChannel">
+    <int:queue capacity="10" />
+  </int:channel>
+
+  <bean id="helloService" class="org.bsnyder.spring.integration.hello.HelloService" />
+
+  <int:service-activator input-channel="inputChannel"
+    output-channel="outputChannel" ref="helloService" method="sayHelloMessage" />
+
+  <int:logging-channel-adapter id="logger"
+    level="INFO" logger-name="helloworld-logger" />
+
+</beans>
